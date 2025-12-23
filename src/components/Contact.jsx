@@ -1,100 +1,78 @@
 import { motion } from "framer-motion";
-import { Mail, Phone, Linkedin, Send } from "lucide-react";
 
 const Contact = () => {
   return (
     <section
       id="contact"
-      className="min-h-screen flex flex-col items-center justify-center bg-gray-900 px-6 py-12 relative overflow-hidden"
+      className="min-h-screen flex flex-col items-center justify-center bg-black px-6 py-20 relative"
     >
-      <div className="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-blue-900/20 to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-gray-900 to-transparent pointer-events-none" />
 
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
-        className="max-w-4xl w-full bg-white/5 backdrop-blur-xl p-8 md:p-12 rounded-3xl border border-white/10 shadow-2xl z-10"
+        className="max-w-4xl w-full text-center"
       >
-        <h2 className="text-4xl md:text-5xl font-bold text-center text-white mb-8">
-          Let's <span className="text-blue-400">Connect</span>
+        <h2 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tighter">
+          LET'S <span className="text-gray-600">TALK</span>
         </h2>
+        <p className="text-gray-500 mb-16 max-w-xl mx-auto font-light">
+          Have a project in mind? Let's build something extraordinary together.
+        </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* Contact Info */}
-          <div className="space-y-6">
-            <div className="flex items-center space-x-4 p-4 bg-gray-800/50 rounded-xl">
-              <div className="p-3 bg-blue-500/20 rounded-lg text-blue-400">
-                <Mail size={24} />
-              </div>
-              <div>
-                <p className="text-gray-400 text-sm">Email</p>
-                <p className="text-white font-medium">
-                  sulemanahmedcs36@gmail.com
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-4 p-4 bg-gray-800/50 rounded-xl">
-              <div className="p-3 bg-green-500/20 rounded-lg text-green-400">
-                <Phone size={24} />
-              </div>
-              <div>
-                <p className="text-gray-400 text-sm">Phone</p>
-                <p className="text-white font-medium">0332-3350954</p>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-4 p-4 bg-gray-800/50 rounded-xl">
-              <div className="p-3 bg-blue-600/20 rounded-lg text-blue-500">
-                <Linkedin size={24} />
-              </div>
-              <div>
-                <p className="text-gray-400 text-sm">LinkedIn</p>
-                <a
-                  href="https://www.linkedin.com/in/suleman-ahmed-8169a6267"
-                  className="text-white font-medium hover:text-blue-400 transition-colors"
-                >
-                  View Profile
-                </a>
-              </div>
-            </div>
+        <form className="max-w-lg mx-auto flex flex-col gap-8">
+          <div className="group relative">
+            <input
+              type="text"
+              placeholder=" "
+              className="w-full bg-transparent border-b border-white/20 text-white py-4 focus:outline-none focus:border-white transition-colors placeholder-transparent peer"
+            />
+            <label className="absolute left-0 top-4 text-gray-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:-top-6 peer-focus:text-xs peer-focus:text-gray-400">
+              Your Name
+            </label>
           </div>
 
-          {/* Form */}
-          <form
-            className="flex flex-col gap-4"
-            onSubmit={(e) => e.preventDefault()}
+          <div className="group relative">
+            <input
+              type="email"
+              placeholder=" "
+              className="w-full bg-transparent border-b border-white/20 text-white py-4 focus:outline-none focus:border-white transition-colors placeholder-transparent peer"
+            />
+            <label className="absolute left-0 top-4 text-gray-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:-top-6 peer-focus:text-xs peer-focus:text-gray-400">
+              Your Email
+            </label>
+          </div>
+
+          <div className="group relative">
+            <textarea
+              rows="4"
+              placeholder=" "
+              className="w-full bg-transparent border-b border-white/20 text-white py-4 focus:outline-none focus:border-white transition-colors placeholder-transparent peer"
+            ></textarea>
+            <label className="absolute left-0 top-4 text-gray-500 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:-top-6 peer-focus:text-xs peer-focus:text-gray-400">
+              Your Message
+            </label>
+          </div>
+
+          <motion.button
+            whileHover={{
+              scale: 1.02,
+              backgroundColor: "white",
+              color: "black",
+            }}
+            whileTap={{ scale: 0.98 }}
+            type="submit"
+            className="mt-8 w-full py-4 border border-white text-white font-bold tracking-widest uppercase hover:bg-white hover:text-black transition-all duration-300"
           >
-            <div className="group">
-              <input
-                type="text"
-                placeholder="Your Name"
-                className="w-full p-4 rounded-xl bg-gray-800/50 border border-gray-700 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-              />
-            </div>
-            <div className="group">
-              <input
-                type="email"
-                placeholder="Your Email"
-                className="w-full p-4 rounded-xl bg-gray-800/50 border border-gray-700 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-              />
-            </div>
-            <div className="group">
-              <textarea
-                rows="4"
-                placeholder="Your Message"
-                className="w-full p-4 rounded-xl bg-gray-800/50 border border-gray-700 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-              ></textarea>
-            </div>
-            <button
-              type="submit"
-              className="mt-2 w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold py-4 rounded-xl hover:shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
-            >
-              <Send size={20} />
-              Send Message
-            </button>
-          </form>
+            Send Message
+          </motion.button>
+        </form>
+
+        <div className="mt-20 text-gray-600 text-sm">
+          <p>sulemanahmedcs36@gmail.com</p>
+          <p>0332-3350954</p>
         </div>
       </motion.div>
     </section>

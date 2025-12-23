@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
 
 const Navbar = () => {
   const [active, setActive] = useState("Home");
@@ -28,20 +27,20 @@ const Navbar = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.8 }}
-      className="fixed top-0 w-full z-50 bg-black/30 backdrop-blur-xl border-b border-white/10"
+      className="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-xl border-b border-white/5" // Glass Effect
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        <h1 className="text-white font-bold text-xl tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
-          Suleman.dev
+        <h1 className="text-white font-bold text-xl tracking-[0.2em] uppercase">
+          Suleman<span className="text-gray-500">.dev</span>
         </h1>
 
         {/* Desktop Menu */}
-        <ul className="hidden md:flex gap-8 text-white/80 font-medium">
+        <ul className="hidden md:flex gap-8 text-gray-400 font-light text-sm tracking-widest uppercase">
           {sections.map((section) => (
             <li
               key={section}
-              className={`cursor-pointer hover:text-blue-400 transition-colors relative ${
-                active === section ? "text-blue-400" : ""
+              className={`cursor-pointer transition-all duration-300 hover:text-white ${
+                active === section ? "text-white font-bold" : ""
               }`}
               onClick={() => {
                 document
@@ -51,22 +50,16 @@ const Navbar = () => {
               }}
             >
               {section}
-              {active === section && (
-                <motion.div
-                  layoutId="underline"
-                  className="absolute -bottom-1 left-0 w-full h-0.5 bg-blue-400"
-                />
-              )}
             </li>
           ))}
         </ul>
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden text-white"
+          className="md:hidden text-white text-2xl focus:outline-none"
           onClick={() => setIsOpen(!isOpen)}
         >
-          {isOpen ? <X size={28} /> : <Menu size={28} />}
+          {isOpen ? "✕" : "☰"}
         </button>
       </div>
 
@@ -77,9 +70,9 @@ const Navbar = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="md:hidden bg-black/90 backdrop-blur-xl overflow-hidden"
+            className="md:hidden bg-black/90 backdrop-blur-2xl border-b border-white/5"
           >
-            <ul className="flex flex-col items-center py-6 gap-6 text-white text-lg">
+            <ul className="flex flex-col items-center py-8 gap-6 text-white text-lg uppercase tracking-widest">
               {sections.map((section) => (
                 <li
                   key={section}
@@ -89,8 +82,8 @@ const Navbar = () => {
                       .scrollIntoView({ behavior: "smooth" });
                     setIsOpen(false);
                   }}
-                  className={`cursor-pointer hover:text-blue-400 ${
-                    active === section ? "text-blue-400 font-bold" : ""
+                  className={`cursor-pointer hover:text-gray-400 ${
+                    active === section ? "text-white" : "text-gray-500"
                   }`}
                 >
                   {section}

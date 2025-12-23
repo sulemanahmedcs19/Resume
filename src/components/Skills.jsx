@@ -6,28 +6,23 @@ const skills = [
   "Node.js",
   "Express.js",
   "Tailwind CSS",
-  "Redux Toolkit",
+  "Redux",
   "Firebase",
   "MongoDB",
-  "Typescript",
   "Three.js",
-  "JWT Auth",
-  "OpenAI API",
+  "Typescript",
   "Git",
-  "GitHub",
-  "Docker",
-  "AWS",
+  "PostgreSQL",
 ];
 
 const Skills = () => {
   return (
     <section
       id="skills"
-      className="min-h-screen flex flex-col items-center justify-center bg-gray-900 px-6 py-12 relative"
+      className="min-h-screen flex flex-col items-center justify-center bg-black px-6 py-20 relative"
     >
-      <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 relative">
-        Tech Stack
-        <span className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full" />
+      <h2 className="text-5xl md:text-7xl font-bold text-white mb-16 tracking-tighter text-center">
+        TECH <span className="text-gray-600">STACK</span>
       </h2>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 w-full max-w-6xl">
@@ -38,9 +33,12 @@ const Skills = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: index * 0.05 }}
-            whileHover={{ scale: 1.1, rotateX: 10, rotateY: 10, zIndex: 10 }}
-            className="flex items-center justify-center h-24 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 text-white font-bold text-lg cursor-pointer border border-white/5 shadow-lg"
-            style={{ perspective: 1000 }}
+            whileHover={{
+              scale: 1.05,
+              borderColor: "rgba(255,255,255,0.5)",
+              backgroundColor: "rgba(255,255,255,0.05)",
+            }}
+            className="h-24 rounded-xl border border-white/5 bg-white/[0.02] flex items-center justify-center text-white font-light text-lg tracking-widest uppercase backdrop-blur-md transition-all duration-300"
           >
             {skill}
           </motion.div>

@@ -4,42 +4,39 @@ const About = () => {
   return (
     <section
       id="about"
-      className="min-h-screen flex items-center justify-center bg-gray-900 px-6 relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center bg-[#050505] px-6 relative overflow-hidden"
     >
-      {/* Background Decoration */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-purple-600/20 rounded-full blur-[100px] -z-10" />
-      <div className="absolute bottom-20 right-10 w-72 h-72 bg-blue-600/20 rounded-full blur-[100px] -z-10" />
+      {/* Background Ambience */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-900/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-900/10 rounded-full blur-[100px] pointer-events-none" />
 
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
+        initial={{ opacity: 0, scale: 0.95 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
-        className="max-w-4xl w-full text-center p-8 md:p-12 rounded-3xl bg-white/5 backdrop-blur-lg border border-white/10 shadow-2xl"
+        className="max-w-4xl w-full text-center p-10 md:p-16 rounded-none border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl"
       >
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 mb-8"
+          className="text-4xl md:text-6xl font-bold text-white mb-8 tracking-tighter"
         >
-          About Me
+          ABOUT ME
         </motion.h2>
 
-        <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
+        <div className="space-y-8 text-gray-400 text-lg md:text-xl font-light leading-relaxed">
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
           >
-            I’m Suleman Ahmed, a Full Stack MERN Developer passionate about
-            building scalable web applications. My expertise lies in{" "}
-            <span className="text-blue-400">
-              React.js, Node.js, Tailwind CSS, and Firebase
-            </span>
-            .
+            I’m Suleman Ahmed, a Full Stack Developer who bridges the gap
+            between <span className="text-white">complex logic</span> and{" "}
+            <span className="text-white">fluid design</span>.
           </motion.p>
 
           <motion.p
@@ -48,10 +45,9 @@ const About = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.6 }}
           >
-            Whether it's managing complex backend logic or crafting interactive
-            frontend animations, I love solving problems. I'm continuously
-            exploring new tech stacks like React Native and Flutter to expand my
-            horizons.
+            My focus is on building applications that feel alive. Using the MERN
+            stack, I craft seamless digital experiences that are both functional
+            and visually stunning.
           </motion.p>
 
           <motion.div
@@ -59,11 +55,15 @@ const About = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.8 }}
-            className="mt-8 p-6 bg-black/30 rounded-xl border-l-4 border-purple-500 text-left"
+            className="pt-8 border-t border-white/10 mt-8"
           >
-            <h3 className="text-xl font-bold text-white mb-2">Education</h3>
-            <p>B.Sc Computer Science - Virtual University of Pakistan</p>
-            <p>Advanced Diploma in Software Engineering - Aptech</p>
+            <h3 className="text-sm font-bold text-white tracking-widest uppercase mb-4">
+              Education
+            </h3>
+            <p className="text-sm">
+              B.Sc Computer Science - Virtual University of Pakistan
+            </p>
+            <p className="text-sm">Advanced Diploma - Aptech</p>
           </motion.div>
         </div>
       </motion.div>
