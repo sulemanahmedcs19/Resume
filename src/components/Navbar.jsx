@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  motionValue,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 
 const Navbar = () => {
   const [active, setActive] = useState("Home");
@@ -27,20 +33,28 @@ const Navbar = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.8 }}
-      className="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-xl border-b border-white/5" // Glass Effect
+      className="fixed top-0 w-full z-50 bg-black/40 backdrop-blur-lg border-b border-white/5"
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        <h1 className="text-white font-bold text-xl tracking-[0.2em] uppercase">
-          Suleman<span className="text-gray-500">.dev</span>
-        </h1>
+        {/* --- Logo Design --- */}
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="text-white font-bold text-xl tracking-[0.2em] uppercase cursor-pointer"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        >
+          Suleman
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-gray-800">
+            .dev
+          </span>
+        </motion.div>
 
-        {/* Desktop Menu */}
-        <ul className="hidden md:flex gap-8 text-gray-400 font-light text-sm tracking-widest uppercase">
+        {/* --- Desktop Menu --- */}
+        <ul className="hidden md:flex gap-10 text-gray-400 font-light text-xs tracking-[0.25em] uppercase relative">
           {sections.map((section) => (
             <li
               key={section}
-              className={`cursor-pointer transition-all duration-300 hover:text-white ${
-                active === section ? "text-white font-bold" : ""
+              className={`cursor-pointer transition-colors duration-300 hover:text-white relative py-1 ${
+                active === section ? "text-white" : ""
               }`}
               onClick={() => {
                 document
@@ -50,46 +64,72 @@ const Navbar = () => {
               }}
             >
               {section}
+              {/* --- Sliding Active Indicator (Glowing Line) --- */}
+              {active === section && (
+                <motion.div
+                  layoutId="nav-indicator"
+                  className="absolute -bottom-2 left-0 w-full h-[2px] bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)]"
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                />
+              )}
             </li>
           ))}
         </ul>
 
-        {/* Mobile Menu Button */}
+        {/* --- Mobile Menu Button --- */}
         <button
-          className="md:hidden text-white text-2xl focus:outline-none"
+          className="md:hidden text-white text-2xl focus:outline-none z-50 relative"
           onClick={() => setIsOpen(!isOpen)}
         >
-          {isOpen ? "✕" : "☰"}
+          <motion.span
+            animate={{ rotate: isOpen ? 180 : 0 }}
+            transition={{ duration: 0.3 }}
+            className="block"
+          >
+            {isOpen ? "✕" : "☰"}
+          </motion.span>
         </button>
       </div>
 
-      {/* Mobile Menu Dropdown */}
+      {/* --- Mobile Menu Dropdown (Staggered Animation) --- */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
+            animate={{ height: "100vh", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="md:hidden bg-black/90 backdrop-blur-2xl border-b border-white/5"
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="md:hidden absolute top-0 left-0 w-full bg-black/95 backdrop-blur-3xl flex flex-col items-center justify-center gap-8 overflow-hidden"
           >
-            <ul className="flex flex-col items-center py-8 gap-6 text-white text-lg uppercase tracking-widest">
-              {sections.map((section) => (
-                <li
-                  key={section}
-                  onClick={() => {
-                    document
-                      .getElementById(section.toLowerCase())
-                      .scrollIntoView({ behavior: "smooth" });
-                    setIsOpen(false);
-                  }}
-                  className={`cursor-pointer hover:text-gray-400 ${
-                    active === section ? "text-white" : "text-gray-500"
-                  }`}
-                >
-                  {section}
-                </li>
-              ))}
-            </ul>
+            <motion.button
+              onClick={() => setIsOpen(false)}
+              className="absolute top-6 right-6 text-white text-2xl"
+            >
+              ✕
+            </motion.button>
+
+            {sections.map((section, index) => (
+              <motion.li
+                key={section}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ delay: index * 0.1, duration: 0.4 }} // Staggered Effect
+                onClick={() => {
+                  document
+                    .getElementById(section.toLowerCase())
+                    .scrollIntoView({ behavior: "smooth" });
+                  setIsOpen(false);
+                }}
+                className={`text-3xl uppercase tracking-widest cursor-pointer transition-colors ${
+                  active === section
+                    ? "text-white font-bold"
+                    : "text-gray-600 hover:text-white"
+                }`}
+              >
+                {section}
+              </motion.li>
+            ))}
           </motion.div>
         )}
       </AnimatePresence>

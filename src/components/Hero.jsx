@@ -4,43 +4,45 @@ import { motion } from "framer-motion";
 import { useRef, useMemo } from "react";
 import * as THREE from "three";
 
-// --- 1. Interactive Particle Wave (Digital Ocean) ---
+// --- 1. Interactive Color Wave (Digital Ocean) ---
 const ParticleWave = () => {
   const meshRef = useRef();
   const mouse = useRef({ x: 0, y: 0 });
 
   const { camera } = useThree();
 
-  // Track Mouse Position for 3D interaction
   useThree(({ pointer }) => {
     mouse.current.x = pointer.x;
     mouse.current.y = pointer.y;
   });
 
-  // Generate 15,000 Particles
   const particles = useMemo(() => {
-    const count = 15000;
+    const count = 12000;
     const positions = new Float32Array(count * 3);
-    const originalY = new Float32Array(count); // To store base height
+    const originalY = new Float32Array(count);
+    const colors = new Float32Array(count * 3);
 
-    // Create a flat grid of particles
-    const separation = 0.15; // Distance between dots
-    const width = 100; // Grid size
+    const separation = 0.15;
+    const width = 100;
 
     let i = 0;
     for (let x = 0; x < width; x++) {
       for (let z = 0; z < width; z++) {
         if (i < count) {
-          positions[i * 3] = x * separation - (width * separation) / 2; // X position
-          positions[i * 3 + 1] = 0; // Y position (height)
-          positions[i * 3 + 2] = z * separation - (width * separation) / 2; // Z position
+          positions[i * 3] = x * separation - (width * separation) / 2;
+          positions[i * 3 + 1] = 0;
+          positions[i * 3 + 2] = z * separation - (width * separation) / 2;
 
           originalY[i] = 0;
+          colors[i * 3] = 0.3;
+          colors[i * 3 + 1] = 0.1;
+          colors[i * 3 + 2] = 0.9;
+
           i++;
         }
       }
     }
-    return { positions, originalY, count };
+    return { positions, originalY, count, colors };
   }, []);
 
   useFrame((state) => {
@@ -49,46 +51,52 @@ const ParticleWave = () => {
 
     if (meshRef.current) {
       const positions = meshRef.current.geometry.attributes.position.array;
+      const colors = meshRef.current.geometry.attributes.color.array;
       const { originalY, count } = particles;
 
-      // Mouse interaction raycasting logic simplified for speed
-      // We project mouse to world roughly
-      const mouseX = pointer.x * 40; // Scale to grid size roughly
-      const mouseY = pointer.y * 20;
+      const mouseTargetX = pointer.x * 30;
+      const mouseTargetZ = -pointer.y * 30;
 
       for (let i = 0; i < count; i++) {
         const x = positions[i * 3];
         const z = positions[i * 3 + 2];
 
-        // 1. Base Wave Animation (Ocean effect)
-        // Using Sin/Cos waves to create organic movement
         const waveHeight =
           Math.sin(x * 0.2 + time) * 1.5 +
           Math.cos(z * 0.15 + time) * 1.5 +
           Math.sin((x + z) * 0.1 + time * 1.5) * 1;
-
-        // 2. Mouse Interaction (Ripple/Hill effect)
-        // Calculate distance from particle to mouse (simplified 2D distance)
-        // We map mouse pointer.x/y to the grid x/z coordinates roughly
-        const mouseTargetX = pointer.x * 30;
-        const mouseTargetZ = -pointer.y * 30; // Invert Z
 
         const dist = Math.sqrt(
           Math.pow(x - mouseTargetX, 2) + Math.pow(z - mouseTargetZ, 2)
         );
 
         let mouseEffect = 0;
-
-        // If mouse is close to particle, push it up
         if (dist < 8) {
-          mouseEffect = (8 - dist) * 1.5; // Height of the hill
+          mouseEffect = (8 - dist) * 2.0;
         }
 
-        // Apply new Y position
-        positions[i * 3 + 1] = waveHeight + mouseEffect;
+        const finalHeight = waveHeight + mouseEffect;
+
+        positions[i * 3 + 1] = finalHeight;
+
+        const color = new THREE.Color();
+        if (finalHeight > 2.5 || mouseEffect > 1) {
+          color.set("#ffffff");
+        } else if (finalHeight > 0.5) {
+          color.set("#00ffff");
+        } else if (finalHeight > -0.5) {
+          color.set("#4f46e5");
+        } else {
+          color.set("#050510");
+        }
+
+        colors[i * 3] = color.r;
+        colors[i * 3 + 1] = color.g;
+        colors[i * 3 + 2] = color.b;
       }
 
       meshRef.current.geometry.attributes.position.needsUpdate = true;
+      meshRef.current.geometry.attributes.color.needsUpdate = true;
     }
   });
 
@@ -101,30 +109,40 @@ const ParticleWave = () => {
           array={particles.positions}
           itemSize={3}
         />
+        <bufferAttribute
+          attach="attributes-color"
+          count={particles.count}
+          array={particles.colors}
+          itemSize={3}
+        />
       </bufferGeometry>
       <pointsMaterial
-        size={0.08}
-        color="#ffffff" // Pure White
+        size={0.12}
+        vertexColors={true}
         sizeAttenuation={true}
         transparent
-        opacity={0.8}
+        opacity={0.9}
+        blending={THREE.AdditiveBlending}
       />
     </points>
   );
 };
 
-// --- 2. Scene Setup ---
+// --- 2. Scene Setup (Clean) ---
 const HeroCanvas = () => (
   <Canvas
-    camera={{ position: [0, 10, 15], fov: 60 }} // Camera looking down
+    camera={{ position: [0, 12, 20], fov: 50 }}
     dpr={[1, 2]}
+    // Fog wala hissa hata diya ha
   >
-    <color attach="background" args={["#000000"]} /> {/* Black Background */}
+    <color attach="background" args={["#000000"]} />
+
     <ParticleWave />
+
     <OrbitControls
       enableZoom={false}
       enablePan={false}
-      autoRotate={true} // Camera slowly rotates around the wave
+      autoRotate={true}
       autoRotateSpeed={0.5}
     />
   </Canvas>
@@ -141,24 +159,24 @@ const Hero = () => {
         <HeroCanvas />
       </div>
 
-      {/* Dark Gradient Overlay to ensure text pops against the dots */}
       <div className="absolute inset-0 z-0 bg-gradient-to-b from-black via-transparent to-black pointer-events-none" />
 
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4 pointer-events-none">
-        <motion.div className="pointer-events-auto max-w-5xl">
+        <motion.div className="pointer-events-auto max-w-6xl">
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9 }}
+            initial={{ opacity: 0, y: 50, filter: "blur(10px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
           >
-            <h1 className="text-6xl md:text-9xl font-black text-white mb-6 leading-none tracking-tighter">
+            <h1 className="text-7xl md:text-9xl font-black text-white mb-2 leading-none tracking-tighter mix-blend-overlay">
               SULEMAN
             </h1>
-            <h2 className="text-4xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-600 mb-8 leading-none">
+
+            <h2 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-cyan-400 to-purple-600 mb-10 leading-none tracking-tighter">
               AHMED
             </h2>
 
-            <p className="text-gray-300 text-lg md:text-2xl mb-10 max-w-2xl mx-auto font-light">
+            <p className="text-gray-300 text-lg md:text-2xl mb-12 max-w-2xl mx-auto font-light tracking-wide">
               Interactive 3D Developer & MERN Stack Architect.
             </p>
 
@@ -166,8 +184,9 @@ const Hero = () => {
               <motion.button
                 whileHover={{
                   scale: 1.05,
-                  backgroundColor: "#ffffff",
-                  color: "#000000",
+                  backgroundColor: "white",
+                  color: "black",
+                  boxShadow: "0 0 20px rgba(255,255,255,0.4)",
                 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() =>
@@ -175,15 +194,15 @@ const Hero = () => {
                     .getElementById("projects")
                     .scrollIntoView({ behavior: "smooth" })
                 }
-                className="px-8 py-4 border border-white text-white font-bold rounded-none hover:transition-all"
+                className="px-10 py-4 border border-white text-white font-bold tracking-[0.2em] uppercase transition-all duration-300"
               >
-                VIEW PROJECTS
+                View Projects
               </motion.button>
               <motion.button
                 whileHover={{
                   scale: 1.05,
-                  backgroundColor: "#ffffff",
-                  color: "#000000",
+                  borderColor: "#ffffff",
+                  backgroundColor: "rgba(255,255,255,0.1)",
                 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() =>
@@ -191,9 +210,9 @@ const Hero = () => {
                     .getElementById("contact")
                     .scrollIntoView({ behavior: "smooth" })
                 }
-                className="px-8 py-4 border border-white text-white font-bold rounded-none hover:transition-all"
+                className="px-10 py-4 border border-white/30 text-white font-bold tracking-[0.2em] uppercase transition-all duration-300"
               >
-                CONTACT ME
+                Contact Me
               </motion.button>
             </div>
           </motion.div>
@@ -202,7 +221,7 @@ const Hero = () => {
 
       <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 z-20">
         <span className="text-white/20 text-[10px] uppercase tracking-[0.5em]">
-          Move Mouse to Interact
+          Drag to Rotate • Hover to Glow
         </span>
       </div>
     </section>
